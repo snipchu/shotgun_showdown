@@ -1,0 +1,23 @@
+[gd_scene load_steps=6 format=3 uid="uid://cd2urxnxdiudv"]
+
+[ext_resource type="Texture2D" uid="uid://bx6d4w0ixentw" path="res://icon.svg" id="1_a5cku"]
+[ext_resource type="Script" path="res://scripts/birdy.gd" id="1_d5gi0"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pv03c"]
+albedo_texture = ExtResource("1_a5cku")
+
+[sub_resource type="QuadMesh" id="QuadMesh_7nou3"]
+material = SubResource("StandardMaterial3D_pv03c")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_l4ygk"]
+size = Vector3(1, 1, 0.05)
+
+[node name="birdy" type="AnimatableBody3D"]
+script = ExtResource("1_d5gi0")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("QuadMesh_7nou3")
+skeleton = NodePath("../..")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_l4ygk")
