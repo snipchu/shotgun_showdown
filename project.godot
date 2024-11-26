@@ -20,6 +20,10 @@ config/icon="res://icon.svg"
 window/size/viewport_width=720
 window/size/viewport_height=520
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/wakatime/plugin.cfg")
+
 [input]
 
 shoot={
