@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://byvpwn0lesob4"]
 
-[ext_resource type="PackedScene" uid="uid://ddsd8phiytxwf" path="res://scenes/bruce.tscn" id="1_c5da6"]
+[ext_resource type="PackedScene" uid="uid://dsgboxg7ror3h" path="res://scenes/bruce.tscn" id="1_c5da6"]
 [ext_resource type="Script" path="res://scripts/world.gd" id="1_lnlqk"]
 [ext_resource type="FontFile" uid="uid://dtj7h64oskytp" path="res://assets/wendy.ttf" id="2_44krh"]
 [ext_resource type="Texture2D" uid="uid://c0jjr1qyb5noi" path="res://assets/crosshair.png" id="2_a7ab6"]
@@ -77,10 +77,10 @@ text = "0"
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_left = 8.0
-offset_top = -92.0
-offset_right = 148.0
-offset_bottom = -47.0
+offset_left = 9.0
+offset_top = -87.0
+offset_right = 149.0
+offset_bottom = -42.0
 grow_vertical = 0
 size_flags_horizontal = 4
 theme_override_fonts/font = ExtResource("2_44krh")

@@ -1,23 +1,35 @@
-[gd_scene load_steps=6 format=3 uid="uid://cd2urxnxdiudv"]
+[gd_scene load_steps=6 format=3 uid="uid://b8jh6boru8tvq"]
 
-[ext_resource type="Texture2D" uid="uid://bx6d4w0ixentw" path="res://icon.svg" id="1_a5cku"]
 [ext_resource type="Script" path="res://scripts/birdy.gd" id="1_d5gi0"]
+[ext_resource type="Texture2D" uid="uid://dhqp65vdvihr0" path="res://assets/bird1_up.png" id="2_xwna4"]
+[ext_resource type="Texture2D" uid="uid://ceb4ogb74lgph" path="res://assets/bird1_down.png" id="2_yncg8"]
+[ext_resource type="Texture2D" uid="uid://djtjh6uencgry" path="res://assets/bird1_death.png" id="3_lsa2j"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pv03c"]
-albedo_texture = ExtResource("1_a5cku")
+[sub_resource type="SpriteFrames" id="SpriteFrames_6cabm"]
+animations = [{
+"frames": [{
+"duration": 1.5,
+"texture": ExtResource("2_xwna4")
+}, {
+"duration": 1.5,
+"texture": ExtResource("2_yncg8")
+}],
+"loop": true,
+"name": &"bird1",
+"speed": 2.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_lsa2j")
+}],
+"loop": false,
+"name": &"death",
+"speed": 0.0
+}]
 
-[sub_resource type="QuadMesh" id="QuadMesh_7nou3"]
-material = SubResource("StandardMaterial3D_pv03c")
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_l4ygk"]
-size = Vector3(1, 1, 0.05)
-
-[node name="birdy" type="AnimatableBody3D"]
+[node name="birdy" type="AnimatedSprite3D"]
+texture_filter = 0
+sprite_frames = SubResource("SpriteFrames_6cabm")
+animation = &"death"
+autoplay = "bird1"
 script = ExtResource("1_d5gi0")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-mesh = SubResource("QuadMesh_7nou3")
-skeleton = NodePath("../..")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-shape = SubResource("BoxShape3D_l4ygk")

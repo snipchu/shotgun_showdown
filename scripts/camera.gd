@@ -3,9 +3,9 @@ extends Node3D
 const SENSITIVITY = .4
 const SMOOTHNESS = 15
 const LOWER_MAX := -20
-const UPPER_MAX := 40
-const LEFT_MAX := -60
-const RIGHT_MAX := 60
+const UPPER_MAX := 30
+const LEFT_MAX := -50
+const RIGHT_MAX := 50
 @onready var camera = $Camera3D
 var camera_input : Vector2
 var rotation_velocity : Vector2
