@@ -15,8 +15,8 @@ func _ready():
 	
 func _unhandled_input(event: InputEvent) -> void:
 	if (event is InputEventMouseMotion):
-		camera_input = event.relative	
-		
+		camera_input = event.relative
+	
 func _process(delta: float) -> void:
 	rotation_velocity = rotation_velocity.lerp(camera_input*SENSITIVITY, SMOOTHNESS*delta)
 	rotate_y(-deg_to_rad(rotation_velocity.x))
@@ -24,3 +24,18 @@ func _process(delta: float) -> void:
 	camera.rotate_x(-deg_to_rad(rotation_velocity.y))
 	camera.rotation.x = clamp(camera.rotation.x, deg_to_rad(LOWER_MAX), deg_to_rad(UPPER_MAX))
 	camera_input = Vector2.ZERO
+	
+	if (Input.is_action_just_pressed("shoot")):
+		shoot_ray()
+	
+func shoot_ray():
+	var mouse_pos = get_viewport().get_mouse_position()
+	var space_state = get_world_3d().direct_space_state
+	var from = camera.project_ray_origin(mouse_pos)
+	var to = from + camera.project_ray_normal(mouse_pos) * 1000
+	var query = PhysicsRayQueryParameters3D.create(from,to)
+	query.collide_with_areas = true
+	query.exclude = [self]
+	var result = space_state.intersect_ray(query)
+	if (result && result["collider"].is_in_group("birds")):
+		signalbus.bird_hit.emit(1)

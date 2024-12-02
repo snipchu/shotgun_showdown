@@ -1,18 +1,18 @@
-[gd_scene load_steps=6 format=3 uid="uid://b8jh6boru8tvq"]
+[gd_scene load_steps=7 format=3 uid="uid://bw10a3b0lx6fx"]
 
-[ext_resource type="Script" path="res://scripts/birdy.gd" id="1_d5gi0"]
-[ext_resource type="Texture2D" uid="uid://dhqp65vdvihr0" path="res://assets/bird1_up.png" id="2_xwna4"]
-[ext_resource type="Texture2D" uid="uid://ceb4ogb74lgph" path="res://assets/bird1_down.png" id="2_yncg8"]
-[ext_resource type="Texture2D" uid="uid://djtjh6uencgry" path="res://assets/bird1_death.png" id="3_lsa2j"]
+[ext_resource type="Script" path="res://scripts/birdy.gd" id="1_pqqsn"]
+[ext_resource type="Texture2D" uid="uid://dhqp65vdvihr0" path="res://assets/bird1_up.png" id="2_ff76s"]
+[ext_resource type="Texture2D" uid="uid://ceb4ogb74lgph" path="res://assets/bird1_down.png" id="3_vy18y"]
+[ext_resource type="Texture2D" uid="uid://djtjh6uencgry" path="res://assets/bird1_death.png" id="4_4egr8"]
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_6cabm"]
+[sub_resource type="SpriteFrames" id="SpriteFrames_7pw1s"]
 animations = [{
 "frames": [{
 "duration": 1.5,
-"texture": ExtResource("2_xwna4")
+"texture": ExtResource("2_ff76s")
 }, {
 "duration": 1.5,
-"texture": ExtResource("2_yncg8")
+"texture": ExtResource("3_vy18y")
 }],
 "loop": true,
 "name": &"bird1",
@@ -20,16 +20,26 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("3_lsa2j")
+"texture": ExtResource("4_4egr8")
 }],
-"loop": false,
+"loop": true,
 "name": &"death",
-"speed": 0.0
+"speed": 2.0
 }]
 
-[node name="birdy" type="AnimatedSprite3D"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_5m41k"]
+size = Vector3(2.2, 1.75, 0.2)
+
+[node name="birdy" type="AnimatableBody3D"]
+script = ExtResource("1_pqqsn")
+
+[node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="."]
 texture_filter = 0
-sprite_frames = SubResource("SpriteFrames_6cabm")
-animation = &"death"
-autoplay = "bird1"
-script = ExtResource("1_d5gi0")
+sprite_frames = SubResource("SpriteFrames_7pw1s")
+animation = &"bird1"
+frame_progress = 0.0950277
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_5m41k")
+
+[connection signal="death" from="." to="." method="_on_death"]

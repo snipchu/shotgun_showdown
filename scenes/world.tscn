@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://byvpwn0lesob4"]
 
-[ext_resource type="PackedScene" uid="uid://dsgboxg7ror3h" path="res://scenes/bruce.tscn" id="1_c5da6"]
+[ext_resource type="PackedScene" uid="uid://148o6w73au2d" path="res://scenes/bruce.tscn" id="1_c5da6"]
 [ext_resource type="Script" path="res://scripts/world.gd" id="1_lnlqk"]
 [ext_resource type="FontFile" uid="uid://dtj7h64oskytp" path="res://assets/wendy.ttf" id="2_44krh"]
 [ext_resource type="Texture2D" uid="uid://c0jjr1qyb5noi" path="res://assets/crosshair.png" id="2_a7ab6"]
@@ -9,7 +9,7 @@
 [node name="world" type="Node3D"]
 script = ExtResource("1_lnlqk")
 
-[node name="HUD" type="CanvasLayer" parent="."]
+[node name="HUD" type="CanvasLayer" parent="." groups=["birds"]]
 
 [node name="crosshair" type="TextureRect" parent="HUD"]
 self_modulate = Color(1, 1, 1, 0.729412)
