@@ -1,26 +1,37 @@
-extends AnimatableBody3D
-signal death
+extends RigidBody3D
+
 var coin : int
 var speed : float
 var birdtype : int
+var target_vel := Vector3.ZERO
+var notdead := true
 @onready var anim: AnimatedSprite3D = $AnimatedSprite3D
-@onready var coll: CollisionPolygon3D = $CollisionPolygon3D
 
-func _get_coin() -> int: return coin
+func get_coin() -> int: return coin
 func get_bird() -> int: return birdtype
+func flipacoin() -> void: coin = -1 if (randi_range(0,1)==0) else 1
 
-func start() -> void:
+func _ready() -> void:
+	randomize()
 	add_to_group("birds")
-	coin = -1 if (randi_range(0,1)==0) else 1
-	birdtype = randi_range(0,0)
-	anim.play("bird1")
+	if randf()>.15:
+		anim.play("bird1")
+		birdtype=0
+	else:
+		anim.play("bird2")
+		birdtype=1
 	anim.flip_h = coin==-1
-	speed = randf_range(3,6)
-
-func _process(delta: float) -> void:
-	position.x += speed*delta*coin
-	if (position.x>15 || position.x<-15): queue_free()
+	speed = randf_range(300,450)
 	
-func _on_death(points):
-	print("I just died!")
-	queue_free()
+func _process(delta: float) -> void:
+	if notdead:
+		linear_velocity = Vector3(speed*delta*coin,0,0)
+		if (position.x>15 || position.x<-15 || position.y<-10): queue_free()
+
+func death():
+	notdead = false
+	anim.play("death")
+	anim.frame = birdtype
+	apply_central_impulse(Vector3(0,randf_range(4,7),0))
+	$CollisionShape3D.set_disabled(true)
+	gravity_scale=2

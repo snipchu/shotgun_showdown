@@ -1,17 +1,20 @@
-[gd_scene load_steps=7 format=3 uid="uid://bw10a3b0lx6fx"]
+[gd_scene load_steps=10 format=3 uid="uid://bri7vvxdav36g"]
 
-[ext_resource type="Script" path="res://scripts/birdy.gd" id="1_pqqsn"]
+[ext_resource type="Script" path="res://scripts/birdy.gd" id="1_86ifw"]
 [ext_resource type="Texture2D" uid="uid://dhqp65vdvihr0" path="res://assets/bird1_up.png" id="2_ff76s"]
 [ext_resource type="Texture2D" uid="uid://ceb4ogb74lgph" path="res://assets/bird1_down.png" id="3_vy18y"]
 [ext_resource type="Texture2D" uid="uid://djtjh6uencgry" path="res://assets/bird1_death.png" id="4_4egr8"]
+[ext_resource type="Texture2D" uid="uid://crxv1iltlt25s" path="res://assets/bird2_up.png" id="4_k0rv4"]
+[ext_resource type="Texture2D" uid="uid://dqos81f43qrol" path="res://assets/bird2_down.png" id="5_7w81u"]
+[ext_resource type="Texture2D" uid="uid://yup26fk1vcle" path="res://assets/bird2_death.png" id="7_pybfb"]
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_7pw1s"]
+[sub_resource type="SpriteFrames" id="SpriteFrames_bmpw6"]
 animations = [{
 "frames": [{
-"duration": 1.5,
+"duration": 1.0,
 "texture": ExtResource("2_ff76s")
 }, {
-"duration": 1.5,
+"duration": 1.0,
 "texture": ExtResource("3_vy18y")
 }],
 "loop": true,
@@ -20,26 +23,38 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("4_4egr8")
+"texture": ExtResource("4_k0rv4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_7w81u")
 }],
 "loop": true,
-"name": &"death",
+"name": &"bird2",
 "speed": 2.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_4egr8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_pybfb")
+}],
+"loop": false,
+"name": &"death",
+"speed": 0.0
 }]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_5m41k"]
-size = Vector3(2.2, 1.75, 0.2)
+[sub_resource type="BoxShape3D" id="BoxShape3D_acl0t"]
+size = Vector3(2.2, 1.75, 0.005)
 
-[node name="birdy" type="AnimatableBody3D"]
-script = ExtResource("1_pqqsn")
+[node name="birdy" type="RigidBody3D"]
+gravity_scale = 0.0
+script = ExtResource("1_86ifw")
 
 [node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="."]
 texture_filter = 0
-sprite_frames = SubResource("SpriteFrames_7pw1s")
-animation = &"bird1"
-frame_progress = 0.0950277
+sprite_frames = SubResource("SpriteFrames_bmpw6")
+animation = &"bird2"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-shape = SubResource("BoxShape3D_5m41k")
-
-[connection signal="death" from="." to="." method="_on_death"]
+shape = SubResource("BoxShape3D_acl0t")
