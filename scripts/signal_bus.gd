@@ -1,4 +1,7 @@
 extends Node
 signal bird_hit
-signal start_game
-signal end_game
+signal shoot
+signal game_started
+signal game_ended
+signal restartgame
+signal endgame

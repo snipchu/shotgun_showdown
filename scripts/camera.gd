@@ -11,8 +11,7 @@ var camera_input : Vector2
 var rotation_velocity : Vector2
 
 func _ready(): Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-func _unhandled_input(event: InputEvent) -> void:
-	if (event is InputEventMouseMotion): camera_input = event.relative
+func _unhandled_input(event: InputEvent) -> void: if (event is InputEventMouseMotion): camera_input = event.relative
 	
 func _process(delta: float) -> void:
 	# mouse tracking/camera rotation
@@ -26,16 +25,25 @@ func _process(delta: float) -> void:
 	if (Input.is_action_just_pressed("shoot")): shoot_ray()
 	
 func shoot_ray():
-	# raycasting be damned..
-	var mouse_pos = get_viewport().get_mouse_position()
-	var space_state = get_world_3d().direct_space_state
-	var from = camera.project_ray_origin(mouse_pos)
-	var to = from + camera.project_ray_normal(mouse_pos) * 1000
-	var query = PhysicsRayQueryParameters3D.create(from,to)
-	query.collide_with_areas = true
-	query.exclude = [self]
-	var result = space_state.intersect_ray(query)
-	# bird was shot
-	if (result && result["collider"].is_in_group("birds")):
-		signalbus.bird_hit.emit(result["collider"].get_bird()+1)
-		result["collider"].death()
+	# if you can even shoot in the first place
+	if (owner.owner.canshoot()):
+		signalbus.shoot.emit()
+		# raycasting be damned..
+		var mouse_pos = get_viewport().get_mouse_position()
+		var space_state = get_world_3d().direct_space_state
+		var from = camera.project_ray_origin(mouse_pos)
+		var to = from + camera.project_ray_normal(mouse_pos) * 1000
+		var query = PhysicsRayQueryParameters3D.create(from,to)
+		query.collide_with_areas = true
+		query.exclude = [self]
+		var result = space_state.intersect_ray(query)
+		
+		# if a bird is hit
+		if (result):
+			if (result["collider"].is_in_group("birds")):
+				signalbus.bird_hit.emit(result["collider"].get_bird()+1)
+				result["collider"].death()
+			elif (result["collider"].name == "endbutton"):
+				signalbus.endgame.emit()
+			elif (result["collider"].name == "restartbutton"):
+				signalbus.restartgame.emit()

@@ -17,17 +17,16 @@ func _ready() -> void:
 	if randf()>.15:
 		anim.play("bird1")
 		birdtype=0
+		speed = randf_range(250,450)
 	else:
 		anim.play("bird2")
 		birdtype=1
+		speed = randf_range(500,650)
 	anim.flip_h = coin==-1
-	speed = randf_range(300,450)
-	
 func _process(delta: float) -> void:
 	if notdead:
 		linear_velocity = Vector3(speed*delta*coin,0,0)
 		if (position.x>15 || position.x<-15 || position.y<-10): queue_free()
-
 func death():
 	notdead = false
 	anim.play("death")
