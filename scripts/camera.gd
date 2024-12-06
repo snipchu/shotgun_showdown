@@ -25,25 +25,22 @@ func _process(delta: float) -> void:
 	if (Input.is_action_just_pressed("shoot")): shoot_ray()
 	
 func shoot_ray():
-	# if you can even shoot in the first place
-	if (owner.owner.canshoot()):
+	# raycasting be damned..
+	var mouse_pos = get_viewport().get_mouse_position()
+	var space_state = get_world_3d().direct_space_state
+	var from = camera.project_ray_origin(mouse_pos)
+	var to = from + camera.project_ray_normal(mouse_pos) * 1000
+	var query = PhysicsRayQueryParameters3D.create(from,to)
+	query.collide_with_areas = true
+	query.exclude = [self]
+	var result = space_state.intersect_ray(query)
+	if (result && owner.owner.ingame()):
 		signalbus.shoot.emit()
-		# raycasting be damned..
-		var mouse_pos = get_viewport().get_mouse_position()
-		var space_state = get_world_3d().direct_space_state
-		var from = camera.project_ray_origin(mouse_pos)
-		var to = from + camera.project_ray_normal(mouse_pos) * 1000
-		var query = PhysicsRayQueryParameters3D.create(from,to)
-		query.collide_with_areas = true
-		query.exclude = [self]
-		var result = space_state.intersect_ray(query)
-		
-		# if a bird is hit
-		if (result):
-			if (result["collider"].is_in_group("birds")):
-				signalbus.bird_hit.emit(result["collider"].get_bird()+1)
-				result["collider"].death()
-			elif (result["collider"].name == "endbutton"):
-				signalbus.endgame.emit()
-			elif (result["collider"].name == "restartbutton"):
-				signalbus.restartgame.emit()
+		if (result["collider"].is_in_group("birds") && owner.owner.canshoot()):
+			signalbus.bird_hit.emit(result["collider"].get_bird()+1)
+			result["collider"].death()
+	elif (result):
+		if (result["collider"].name == "endbutton"):
+			get_tree().quit()
+		elif (result["collider"].name == "restartbutton"):
+			get_tree().reload_current_scene()

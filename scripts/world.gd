@@ -10,9 +10,7 @@ func _ready() -> void:
 	randomize()
 	signalbus.bird_hit.connect(add_point)
 	signalbus.shoot.connect(shoot)
-	signalbus.restartgame.connect(add_point)
-	signalbus.endgame.connect(shoot)
-
+	
 func _process(_delta: float) -> void:
 	if (!ended):
 		$HUD/timer.text = str(floor($gamelength.time_left)) if (started) else str(20)
@@ -29,12 +27,23 @@ func _on_countdown_timeout() -> void:
 func _on_gamelength_timeout() -> void: end_game()
 func end_game() -> void:
 	ended=true
-	$HUD3D.visible = true
-	$HUD3D/restartbutton/CollisionShape3D.disabled = false
-	$HUD3D/endbutton/CollisionShape3D.disabled = false
-	$HUD3D/score.text = "score: "+str(score)
 	signalbus.game_ended.emit()
 	$bird_spawn.stop()
+	$HUD3D/restartbutton/CollisionShape3D.disabled = false
+	$HUD3D/endbutton/CollisionShape3D.disabled = false
+	$HUD3D.visible = true
+	$HUD3D/score.text = "score: "+str(score)
+	if (score>=30):
+		$HUD3D/result.text = "You did great"
+		$HUD3D/resultimg.texture = load("res://assets/bruce_great.png")
+	elif (score>20):
+		$HUD3D/result.text = "You did good"
+		$HUD3D/resultimg.texture = load("res://assets/bruce_good.png")
+	else:
+		$HUD3D/result.text = "You did okay"
+		$HUD3D/resultimg.texture = load("res://assets/bruce_okay.png")
+
+	
 func canshoot(): return ammobank>0 || ammo>0
 func ingame(): return started && !ended
 
