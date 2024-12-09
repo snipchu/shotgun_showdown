@@ -1,18 +1,85 @@
-[gd_scene load_steps=9 format=3 uid="uid://byvpwn0lesob4"]
+[gd_scene load_steps=19 format=3 uid="uid://byvpwn0lesob4"]
 
 [ext_resource type="PackedScene" uid="uid://148o6w73au2d" path="res://scenes/bruce.tscn" id="1_c5da6"]
 [ext_resource type="Script" path="res://scripts/world.gd" id="1_lnlqk"]
 [ext_resource type="FontFile" uid="uid://cwf1bg82mamqp" path="res://assets/wendy.ttf" id="2_44krh"]
 [ext_resource type="Texture2D" uid="uid://c0jjr1qyb5noi" path="res://assets/crosshair.png" id="2_a7ab6"]
 [ext_resource type="Texture2D" uid="uid://d2k3vga70lha6" path="res://assets/bruce_great.png" id="4_cvgwy"]
+[ext_resource type="Texture2D" uid="uid://bjheserw2xwxp" path="res://assets/shotgun_idle.png" id="4_y0d42"]
+[ext_resource type="Texture2D" uid="uid://dyw2h2wp80aot" path="res://assets/shotgun_reload.png" id="5_7bt0j"]
+[ext_resource type="Texture2D" uid="uid://dcwa7dhlkiv60" path="res://assets/shotgun_shoot.png" id="6_kfyl4"]
 
 [sub_resource type="GDScript" id="GDScript_rjh4i"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a6bmp"]
+atlas = ExtResource("5_7bt0j")
+region = Rect2(0, 0, 200, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bouhp"]
+atlas = ExtResource("5_7bt0j")
+region = Rect2(0, 100, 200, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_g83l1"]
+atlas = ExtResource("6_kfyl4")
+region = Rect2(0, 0, 200, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k17uj"]
+atlas = ExtResource("6_kfyl4")
+region = Rect2(0, 100, 200, 100)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_24vmu"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_y0d42")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a6bmp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bouhp")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_y0d42")
+}],
+"loop": false,
+"name": &"reload",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_g83l1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_k17uj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_y0d42")
+}],
+"loop": false,
+"name": &"shoot",
+"speed": 12.0
+}]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_05wb3"]
 size = Vector3(4, 1.5, 0.01)
 
 [sub_resource type="BoxMesh" id="BoxMesh_c6rts"]
 size = Vector3(4, 1.5, 0.01)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ewci8"]
+
+[sub_resource type="MeshLibrary" id="MeshLibrary_p26rw"]
+item/0/name = ""
+item/0/mesh_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+item/0/shapes = [SubResource("BoxShape3D_ewci8"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)]
+item/0/navigation_mesh_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+item/0/navigation_layers = 1
 
 [node name="world" type="Node3D"]
 script = ExtResource("1_lnlqk")
@@ -34,10 +101,11 @@ offset_right = 20.0
 offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
+scale = Vector2(0.2, 0.2)
 size_flags_horizontal = 4
 size_flags_vertical = 4
 texture = ExtResource("2_a7ab6")
-stretch_mode = 3
+metadata/_edit_use_anchors_ = true
 
 [node name="bigtext" type="Label" parent="HUD"]
 texture_filter = 1
@@ -96,6 +164,21 @@ size_flags_horizontal = 4
 theme_override_fonts/font = ExtResource("2_44krh")
 theme_override_font_sizes/font_size = 50
 text = "10 - 30"
+
+[node name="brucegun" type="TextureRect" parent="HUD"]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -100.0
+offset_top = -50.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="anim" type="AnimatedSprite2D" parent="HUD/brucegun"]
+sprite_frames = SubResource("SpriteFrames_24vmu")
+animation = &"idle"
 
 [node name="HUD3D" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, -18)
@@ -186,6 +269,11 @@ autostart = true
 
 [node name="shot_cooldown" type="Timer" parent="."]
 wait_time = 0.1
+
+[node name="gun_sfx" type="AudioStreamPlayer3D" parent="."]
+
+[node name="GridMap" type="GridMap" parent="."]
+mesh_library = SubResource("MeshLibrary_p26rw")
 
 [connection signal="timeout" from="gamelength" to="." method="_on_gamelength_timeout"]
 [connection signal="timeout" from="bird_spawn" to="." method="_on_bird_spawn_timeout"]

@@ -1,6 +1,6 @@
 extends Node3D
 
-const SENSITIVITY = .4
+const SENSITIVITY = .2
 const SMOOTHNESS = 15
 const LOWER_MAX := -20
 const UPPER_MAX := 30
@@ -34,11 +34,14 @@ func shoot_ray():
 	query.collide_with_areas = true
 	query.exclude = [self]
 	var result = space_state.intersect_ray(query)
-	if (result && owner.owner.ingame()):
-		signalbus.shoot.emit()
-		if (result["collider"].is_in_group("birds") && owner.owner.canshoot()):
+	if (owner.owner.ingame() && !owner.owner.canshoot()):
+		signalbus.reload.emit()
+	elif (result && owner.owner.ingame() && owner.owner.canshoot()):
+		if (result["collider"].is_in_group("birds")):
 			signalbus.bird_hit.emit(result["collider"].get_bird()+1)
 			result["collider"].death()
+	elif (owner.owner.ingame()):
+		signalbus.miss_shot.emit()
 	elif (result):
 		if (result["collider"].name == "endbutton"):
 			get_tree().quit()

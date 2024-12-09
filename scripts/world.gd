@@ -1,18 +1,19 @@
 extends Node3D
 const birdyscene = preload("res://scenes/birdy.tscn")
 var score := 0
-var ammo := 10;
-var ammobank = 30;
-var started := false;
-var ended := false;
+var ammo := 10
+var ammobank = 30
+var started := false
+var ended := false
 
 func _ready() -> void:
 	randomize()
 	signalbus.bird_hit.connect(add_point)
-	signalbus.shoot.connect(shoot)
+	signalbus.miss_shot.connect(miss_shot)
+	signalbus.reload.connect(reload)
 	
 func _process(_delta: float) -> void:
-	if (!ended):
+	if (!ended && ammo+ammobank>0):
 		$HUD/timer.text = str(floor($gamelength.time_left)) if (started) else str(20)
 		$HUD/bigtext.text = str(floor($countdown.time_left)) if floor($countdown.time_left)!=0 else "START"
 	else:
@@ -43,20 +44,30 @@ func end_game() -> void:
 		$HUD3D/result.text = "You did okay"
 		$HUD3D/resultimg.texture = load("res://assets/bruce_okay.png")
 
-	
-func canshoot(): return ammobank>0 || ammo>0
+func canshoot(): return ammobank>=0 && ammo>0
 func ingame(): return started && !ended
-
 func shoot():
-	if (ammo>0):
-		ammo -= 1
-	else:
-		ammobank -= 10
-		ammo = 10
+	ammo -= 1
+	$gun_sfx.play()
 	$HUD/ammo.text = str(ammo)+" - "+str(ammobank)
+func reload():
+	$gun_sfx.stream = preload("res://assets/31701__lumikon__shotgun-sfx/564482__lumikon__shotgun-reload-sfx.wav")
+	$gun_sfx.play()
+	$HUD/brucegun/anim.play("reload")
+	ammobank -= 10
+	ammo = 10
+func miss_shot():
+	shoot()
+	$HUD/brucegun/anim.play("shoot")
+	$gun_sfx.stream = preload("res://assets/31701__lumikon__shotgun-sfx/564480__lumikon__shotgun-shot-sfx.wav")
+	$gun_sfx.play()
 func add_point(points):
+	shoot()
+	$gun_sfx.stream = preload("res://assets/31701__lumikon__shotgun-sfx/564483__lumikon__shotgun-hit.wav")
+	$gun_sfx.play()
 	score += points
 	$HUD/score.text = str(score)
+	$HUD/brucegun/anim.play("shoot")
 func _on_bird_spawn_timeout() -> void:
 	var birdy = birdyscene.instantiate()
 	birdy.flipacoin()
