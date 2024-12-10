@@ -1,4 +1,4 @@
-extends Node3D
+extends WorldEnvironment
 const birdyscene = preload("res://scenes/birdy.tscn")
 var score := 0
 var ammo := 10

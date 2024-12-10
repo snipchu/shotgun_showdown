@@ -9,7 +9,13 @@
 [ext_resource type="Texture2D" uid="uid://dyw2h2wp80aot" path="res://assets/shotgun_reload.png" id="5_7bt0j"]
 [ext_resource type="Texture2D" uid="uid://dcwa7dhlkiv60" path="res://assets/shotgun_shoot.png" id="6_kfyl4"]
 
-[sub_resource type="GDScript" id="GDScript_rjh4i"]
+[sub_resource type="Sky" id="Sky_ve835"]
+
+[sub_resource type="Environment" id="Environment_mho3y"]
+background_color = Color(0.542957, 0.54199, 0.960606, 1)
+sky = SubResource("Sky_ve835")
+
+[sub_resource type="GDScript" id="GDScript_k20j0"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_a6bmp"]
 atlas = ExtResource("5_7bt0j")
@@ -27,7 +33,7 @@ region = Rect2(0, 0, 200, 100)
 atlas = ExtResource("6_kfyl4")
 region = Rect2(0, 100, 200, 100)
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_24vmu"]
+[sub_resource type="SpriteFrames" id="SpriteFrames_s0p3q"]
 animations = [{
 "frames": [{
 "duration": 1.0,
@@ -66,30 +72,20 @@ animations = [{
 "speed": 12.0
 }]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_05wb3"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_8thae"]
 size = Vector3(4, 1.5, 0.01)
 
-[sub_resource type="BoxMesh" id="BoxMesh_c6rts"]
+[sub_resource type="BoxMesh" id="BoxMesh_77dm4"]
 size = Vector3(4, 1.5, 0.01)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_ewci8"]
-
-[sub_resource type="MeshLibrary" id="MeshLibrary_p26rw"]
-item/0/name = ""
-item/0/mesh_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
-item/0/shapes = [SubResource("BoxShape3D_ewci8"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)]
-item/0/navigation_mesh_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
-item/0/navigation_layers = 1
-
-[node name="world" type="Node3D"]
+[node name="world" type="WorldEnvironment"]
+environment = SubResource("Environment_mho3y")
 script = ExtResource("1_lnlqk")
 
 [node name="HUD" type="CanvasLayer" parent="."]
-script = SubResource("GDScript_rjh4i")
+script = SubResource("GDScript_k20j0")
 
-[node name="crosshair" type="TextureRect" parent="HUD"]
-self_modulate = Color(1, 1, 1, 0.729412)
-texture_filter = 1
+[node name="CenterContainer" type="CenterContainer" parent="HUD"]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -101,11 +97,13 @@ offset_right = 20.0
 offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(0.2, 0.2)
 size_flags_horizontal = 4
 size_flags_vertical = 4
+
+[node name="TextureRect" type="TextureRect" parent="HUD/CenterContainer"]
+self_modulate = Color(1, 1, 1, 0.741176)
+layout_mode = 2
 texture = ExtResource("2_a7ab6")
-metadata/_edit_use_anchors_ = true
 
 [node name="bigtext" type="Label" parent="HUD"]
 texture_filter = 1
@@ -125,6 +123,7 @@ theme_override_font_sizes/font_size = 120
 text = "3"
 horizontal_alignment = 1
 vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
 
 [node name="timer" type="Label" parent="HUD"]
 texture_filter = 1
@@ -135,6 +134,7 @@ offset_bottom = 53.0
 theme_override_fonts/font = ExtResource("2_44krh")
 theme_override_font_sizes/font_size = 50
 text = "20"
+metadata/_edit_use_anchors_ = true
 
 [node name="score" type="Label" parent="HUD"]
 texture_filter = 1
@@ -149,6 +149,7 @@ grow_vertical = 0
 theme_override_fonts/font = ExtResource("2_44krh")
 theme_override_font_sizes/font_size = 50
 text = "0"
+metadata/_edit_use_anchors_ = true
 
 [node name="ammo" type="Label" parent="HUD"]
 texture_filter = 1
@@ -164,8 +165,10 @@ size_flags_horizontal = 4
 theme_override_fonts/font = ExtResource("2_44krh")
 theme_override_font_sizes/font_size = 50
 text = "10 - 30"
+metadata/_edit_use_anchors_ = true
 
 [node name="brucegun" type="TextureRect" parent="HUD"]
+visible = false
 anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
@@ -177,7 +180,7 @@ grow_horizontal = 0
 grow_vertical = 0
 
 [node name="anim" type="AnimatedSprite2D" parent="HUD/brucegun"]
-sprite_frames = SubResource("SpriteFrames_24vmu")
+sprite_frames = SubResource("SpriteFrames_s0p3q")
 animation = &"idle"
 
 [node name="HUD3D" type="Node3D" parent="."]
@@ -209,12 +212,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, -1, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="HUD3D/restartbutton"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1, 1, 0)
-shape = SubResource("BoxShape3D_05wb3")
+shape = SubResource("BoxShape3D_8thae")
 disabled = true
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="HUD3D/restartbutton"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1, 1, 0)
-mesh = SubResource("BoxMesh_c6rts")
+mesh = SubResource("BoxMesh_77dm4")
 skeleton = NodePath("")
 
 [node name="bigtext" type="Label3D" parent="HUD3D/restartbutton"]
@@ -229,12 +232,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, -1, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="HUD3D/endbutton"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1, 1, 0)
-shape = SubResource("BoxShape3D_05wb3")
+shape = SubResource("BoxShape3D_8thae")
 disabled = true
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="HUD3D/endbutton"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1, 1, 0)
-mesh = SubResource("BoxMesh_c6rts")
+mesh = SubResource("BoxMesh_77dm4")
 skeleton = NodePath("")
 
 [node name="bigtext" type="Label3D" parent="HUD3D/endbutton"]
@@ -267,13 +270,7 @@ wait_time = 4.0
 one_shot = true
 autostart = true
 
-[node name="shot_cooldown" type="Timer" parent="."]
-wait_time = 0.1
-
 [node name="gun_sfx" type="AudioStreamPlayer3D" parent="."]
-
-[node name="GridMap" type="GridMap" parent="."]
-mesh_library = SubResource("MeshLibrary_p26rw")
 
 [connection signal="timeout" from="gamelength" to="." method="_on_gamelength_timeout"]
 [connection signal="timeout" from="bird_spawn" to="." method="_on_bird_spawn_timeout"]

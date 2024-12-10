@@ -2,8 +2,8 @@ extends CanvasLayer
 
 var introdialog = [
 	"Let's go camping",
-	"Filler text Intro 2",
-	"Filler text Intro 3"
+	"I heard the woods has plenty of blue birds.",
+	"Maybe there'll be some red ones too"
 ]
 var dialogindex = 0;
 
@@ -15,6 +15,6 @@ func _process(delta: float) -> void:
 
 func nextline():
 	if (dialogindex<introdialog.size()):
-		$box/text_dialogue.text = introdialog[dialogindex]
+		$text_dialogue.text = introdialog[dialogindex]
 	else:
 		get_tree().change_scene_to_file("res://scenes/world.tscn")
